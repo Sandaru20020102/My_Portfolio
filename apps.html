@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SandaruOS Apps</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(0, 255, 153, 0.12), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(0, 153, 255, 0.12), transparent 30%),
+                #050505;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .topbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 10000;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00ff99;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 255, 153, 0.15);
+            border-color: rgba(0, 255, 153, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            padding-top: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 58px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            opacity: 0.8;
+            font-size: 18px;
+        }
+
+        .apps-grid {
+            width: 90%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding-bottom: 60px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 22px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 153, 0.08), transparent);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0, 255, 153, 0.35);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .app-card img {
+            width: 85px;
+            height: 85px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-card h2 {
+            margin-bottom: 12px;
+            color: #00ff99;
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-card p {
+            line-height: 1.7;
+            opacity: 0.82;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* WINDOW SYSTEM */
+
+        .app-window {
+
+            position: fixed;
+
+
+            width: 850px;
+            height: 400px;
+
+
+            top: 80px;
+            left: 180px;
+
+            background: rgba(15, 15, 15, 0.92);
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            z-index: 99999;
+
+            display: none;
+
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.5);
+
+            animation: openWindow 0.35s ease;
+        }
+
+        @keyframes openWindow {
+
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+        .window-header {
+
+            height: 55px;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 20px;
+
+            cursor: move;
+        }
+
+        .window-title {
+
+            color: #00ff99;
+
+            font-weight: 700;
+
+            font-size: 16px;
+        }
+
+        .window-controls {
+
+            display: flex;
+            gap: 10px;
+        }
+
+        .control {
+
+            width: 14px;
+            height: 14px;
+
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .control:hover {
+            transform: scale(1.15);
+        }
+
+        .red {
+            background: #ff5f57;
+        }
+
+        .yellow {
+            background: #febc2e;
+        }
+
+        .green {
+            background: #28c840;
+        }
+
+        .window-content {
+            height: calc(100% - 55px);
+            overflow-y: auto;
+            padding: 20px;
+            /* slightly tighter */
+        }
+
+        /* PROFILE SECTION */
+
+        .profile-section {
+
+            display: flex;
+            align-items: center;
+            gap: 30px;
+
+            margin-bottom: 35px;
+
+            flex-wrap: wrap;
+        }
+
+        .profile-image {
+
+            width: 170px;
+            height: 170px;
+
+            border-radius: 22px;
+
+            object-fit: cover;
+
+            border: 2px solid rgba(0, 255, 153, 0.35);
+
+            box-shadow:
+                0 15px 35px rgba(0, 255, 153, 0.18);
+        }
+
+        .profile-info h1 {
+
+            font-size: 42px;
+
+            margin-bottom: 10px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-info h3 {
+
+            opacity: 0.8;
+
+            font-weight: 500;
+        }
+
+        /* ABOUT BOX */
+
+        .about-box {
+
+            background: rgba(255, 255, 255, 0.04);
+
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            line-height: 2;
+
+            font-size: 16px;
+
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* PROJECTS WINDOW */
+
+        .projects-main-title {
+
+            font-size: 42px;
+
+            margin-bottom: 35px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .project-category {
+
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+
+            width: 100%;
+
+            padding: 18px;
+
+            border: none;
+
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            color: white;
+
+            font-size: 18px;
+            font-weight: 700;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            backdrop-filter: blur(15px);
+        }
+
+        .category-btn:hover {
+
+            background: rgba(0, 255, 153, 0.15);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            transform: translateY(-3px);
+        }
+
+        .projects-list {
+
+            margin-top: 15px;
+
+            display: none;
+
+            flex-direction: column;
+
+            gap: 15px;
+
+            padding-left: 10px;
+        }
+
+        .projects-list a {
+
+            text-decoration: none;
+
+            color: white;
+
+            padding: 16px;
+
+            border-radius: 16px;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            transition: 0.3s;
+
+            display: block;
+        }
+
+        .projects-list a:hover {
+
+            background: rgba(0, 255, 153, 0.12);
+
+            border-color: rgba(0, 255, 153, 0.3);
+
+            transform: translateX(8px);
+
+            color: #00ff99;
+        }
+
+        /* SKILLS WINDOW */
+
+        .skills-main-title {
+
+            font-size: 42px;
+
+            margin-bottom: 35px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .skills-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 25px;
+        }
+
+        .skill-box {
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
+
+            padding: 30px;
+
+            transition: 0.35s;
+
+            backdrop-filter: blur(15px);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .skill-box::before {
+
+            content: '';
+
+            position: absolute;
+
+            inset: 0;
+
+            background: linear-gradient(135deg,
+                    rgba(0, 255, 153, 0.08),
+                    transparent);
+
+            opacity: 0;
+
+            transition: 0.35s;
+        }
+
+        .skill-box:hover::before {
+
+            opacity: 1;
+        }
+
+        .skill-box:hover {
+
+            transform: translateY(-8px);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .skill-icon {
+
+            font-size: 42px;
+
+            margin-bottom: 20px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-box h2 {
+
+            margin-bottom: 15px;
+
+            color: #00ff99;
+
+            font-size: 22px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-box p {
+
+            line-height: 1.8;
+
+            opacity: 0.85;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .skills-main-title {
+
+                font-size: 30px;
+            }
+
+        }
+
+        /* EDUCATION WINDOW */
+
+        .education-main-title {
+
+            font-size: 42px;
+
+            margin-bottom: 35px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .edu-box {
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
+
+            padding: 30px;
+
+            margin-bottom: 30px;
+
+            backdrop-filter: blur(15px);
+
+            transition: 0.35s;
+        }
+
+        .edu-box:hover {
+
+            transform: translateY(-6px);
+
+            border-color: rgba(0, 255, 153, 0.3);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .edu-box h2 {
+
+            margin-bottom: 20px;
+
+            color: #00ff99;
+
+            font-size: 24px;
+        }
+
+        .edu-box p {
+
+            line-height: 1.8;
+
+            opacity: 0.9;
+        }
+
+        .transcript-btn {
+
+            display: inline-block;
+
+            margin-top: 25px;
+
+            padding: 14px 24px;
+
+            border-radius: 14px;
+
+            text-decoration: none;
+
+            color: white;
+
+            font-weight: 600;
+
+            background: rgba(0, 255, 153, 0.12);
+
+            border: 1px solid rgba(0, 255, 153, 0.3);
+
+            transition: 0.3s;
+
+            backdrop-filter: blur(15px);
+        }
+
+        .transcript-btn:hover {
+
+            transform: translateY(-4px);
+
+            background: rgba(0, 255, 153, 0.2);
+
+            box-shadow: 0 15px 30px rgba(0, 255, 153, 0.15);
+        }
+
+        .exam-id {
+
+            margin-bottom: 20px;
+
+            color: #00bfff;
+
+            font-weight: 600;
+        }
+
+        /* TABLE */
+
+        .edu-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            overflow: hidden;
+
+            border-radius: 16px;
+        }
+
+        .edu-table th {
+
+            background: rgba(0, 255, 153, 0.15);
+
+            color: #00ff99;
+
+            padding: 15px;
+
+            text-align: left;
+        }
+
+        .edu-table td {
+
+            padding: 15px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .edu-table tr:hover td {
+
+            background: rgba(0, 255, 153, 0.08);
+        }
+
+        /* QUALIFICATIONS */
+
+        .qualification-list {
+
+            padding-left: 20px;
+
+            line-height: 2;
+        }
+
+        .qualification-list li {
+
+            margin-bottom: 12px;
+
+            opacity: 0.9;
+        }
+
+        /* CONTACT WINDOW */
+
+        .contact-main-title {
+
+            font-size: 42px;
+
+            margin-bottom: 15px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-subtitle {
+
+            opacity: 0.8;
+
+            margin-bottom: 35px;
+
+            line-height: 1.8;
+        }
+
+        /* GRID */
+
+        .contact-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 25px;
+        }
+
+        /* CARD */
+
+        .contact-card {
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
+
+            padding: 35px 25px;
+
+            text-align: center;
+
+            backdrop-filter: blur(15px);
+
+            transition: 0.35s;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .contact-card .contact-icon i {
+            color: white !important;
+        }
+
+        .contact-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            inset: 0;
+
+            background: linear-gradient(135deg,
+                    rgba(0, 255, 153, 0.08),
+                    transparent);
+
+            opacity: 0;
+
+            transition: 0.35s;
+        }
+
+        .contact-card:hover::before {
+
+            opacity: 1;
+        }
+
+        .contact-card:hover {
+
+            transform: translateY(-8px);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ICON */
+
+        .contact-icon {
+
+            font-size: 52px;
+
+            margin-bottom: 20px;
+
+            position: relative;
+            z-index: 2;
+
+            color: white;
+        }
+
+        /* TEXT */
+
+        .contact-card h2 {
+
+            margin-bottom: 15px;
+
+            color: #00ff99;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-card a {
+
+            color: white;
+
+            text-decoration: none;
+
+            opacity: 0.9;
+
+            line-height: 1.8;
+
+            word-break: break-word;
+
+            transition: 0.3s;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-card a:hover {
+
+            color: #00ff99;
+        }
+
+        /* SOCIAL WINDOW */
+
+        .social-main-title {
+
+            font-size: 42px;
+
+            margin-bottom: 15px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-subtitle {
+
+            opacity: 0.8;
+
+            margin-bottom: 35px;
+
+            line-height: 1.8;
+        }
+
+        /* GRID */
+
+        .social-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+            gap: 25px;
+        }
+
+        /* CARD */
+
+        .social-card {
+
+            text-decoration: none;
+
+            color: white;
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
+
+            padding: 28px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            transition: 0.35s;
+
+            backdrop-filter: blur(15px);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .social-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            inset: 0;
+
+            background: linear-gradient(135deg,
+                    rgba(0, 255, 153, 0.08),
+                    transparent);
+
+            opacity: 0;
+
+            transition: 0.35s;
+        }
+
+        .social-card:hover::before {
+
+            opacity: 1;
+        }
+
+        .social-card:hover {
+
+            transform: translateY(-8px);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ICON */
+
+        .social-icon {
+
+            width: 70px;
+            height: 70px;
+
+            border-radius: 20px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            position: relative;
+            z-index: 2;
+
+            flex-shrink: 0;
+        }
+
+        /* PLATFORM COLORS */
+
+        .linkedin {
+
+            background: rgba(0, 119, 181, 0.18);
+
+            color: #0A66C2;
+        }
+
+        .github {
+
+            background: rgba(255, 255, 255, 0.12);
+
+            color: white;
+        }
+
+        .facebook {
+
+            background: rgba(24, 119, 242, 0.18);
+
+            color: #1877F2;
+        }
+
+        .tiktok {
+
+            background: rgba(255, 255, 255, 0.12);
+
+            color: #ff0050;
+        }
+
+        /* INFO */
+
+        .social-info {
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-info h2 {
+
+            margin-bottom: 8px;
+
+            color: #00ff99;
+        }
+
+        .social-info p {
+
+            opacity: 0.8;
+
+            line-height: 1.7;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .social-main-title {
+
+                font-size: 30px;
+            }
+
+            .social-card {
+
+                flex-direction: column;
+
+                text-align: center;
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .contact-main-title {
+
+                font-size: 30px;
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .education-main-title {
+
+                font-size: 30px;
+            }
+
+            .edu-table {
+
+                font-size: 14px;
+            }
+
+        }
+
+        /* MAXIMIZE */
+
+        .maximized {
+
+            width: 100vw !important;
+            height: 100vh !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            border-radius: 0 !important;
+        }
+
+        /* ACHIEVEMENTS WINDOW */
+
+        .achievements-title {
+
+            font-size: 42px;
+
+            margin-bottom: 15px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .achievements-subtitle {
+
+            opacity: 0.8;
+
+            margin-bottom: 35px;
+
+            line-height: 1.8;
+        }
+
+        .achievements-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+        .achievement-item {
+
+            text-decoration: none;
+
+            color: white;
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            padding: 18px 20px;
+
+            border-radius: 16px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            transition: 0.3s;
+
+            backdrop-filter: blur(15px);
+        }
+
+        .achievement-item span {
+
+            color: #00ff99;
+
+            font-size: 13px;
+        }
+
+        .achievement-item:hover {
+
+            transform: translateX(8px);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            background: rgba(0, 255, 153, 0.08);
+        }
+
+        /* AI LAB */
+
+        .ai-title {
+
+            font-size: 42px;
+
+            margin-bottom: 15px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ai-subtitle {
+
+            opacity: 0.8;
+
+            margin-bottom: 35px;
+
+            line-height: 1.8;
+        }
+
+        .ai-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 25px;
+        }
+
+        .ai-card {
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
+
+            padding: 28px;
+
+            transition: 0.35s;
+
+            backdrop-filter: blur(15px);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .ai-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            inset: 0;
+
+            background: linear-gradient(135deg,
+                    rgba(0, 255, 153, 0.08),
+                    transparent);
+
+            opacity: 0;
+
+            transition: 0.35s;
+        }
+
+        .ai-card:hover::before {
+
+            opacity: 1;
+        }
+
+        .ai-card:hover {
+
+            transform: translateY(-8px);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .ai-icon {
+
+            font-size: 42px;
+
+            margin-bottom: 15px;
+        }
+
+        .ai-card h2 {
+
+            color: #00ff99;
+
+            margin-bottom: 12px;
+        }
+
+        .ai-card p {
+
+            opacity: 0.85;
+
+            line-height: 1.7;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .ai-title {
+                font-size: 30px;
+            }
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .achievements-title {
+                font-size: 30px;
+            }
+
+            .achievement-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        .task-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .task-btn:hover {
+            background: rgba(0, 255, 153, 0.15);
+            border-color: rgba(0, 255, 153, 0.4);
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px) {
+
+            .app-window {
+                position: fixed;
+
+                width: min(700px, 92vw);
+                /* ✅ smaller + responsive */
+                height: min(520px, 80vh);
+                /* ✅ compact like real app */
+
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+
+                background: rgba(15, 15, 15, 0.92);
+                backdrop-filter: blur(25px);
+
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 18px;
+
+                overflow: hidden;
+                z-index: 99999;
+
+                display: none;
+
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+                animation: openWindow 0.25s ease;
+            }
+
+            .profile-section {
+
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info h1 {
+
+                font-size: 30px;
+            }
+
+        }
+
+        @media(max-width:768px) {
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .apps-grid {
+                width: 95%;
+            }
+
+        }
+
+        .desktop {
+            margin-top: 50px;
+            padding: 40px;
+
+            display: grid;
+
+            /* 🔥 FIXED 4 COLUMNS */
+            grid-template-columns: repeat(4, 1fr);
+
+            /* spacing between apps */
+            gap: 35px;
+
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+
+            justify-items: center;
+            align-items: center;
+        }
+
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.25s;
+            user-select: none;
+        }
+
+        .app-icon img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 10px;
+            transition: 0.25s;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+        }
+
+        .app-icon span {
+            font-size: 13px;
+            opacity: 0.85;
+            text-align: center;
+        }
+
+        .app-icon:hover {
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .app-icon:hover img {
+            filter: drop-shadow(0 0 15px rgba(0, 255, 153, 0.6));
+        }
+
+        @media(max-width: 900px) {
+            .desktop {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width: 600px) {
+            .desktop {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .cv-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+            padding: 14px 24px;
+
+            border-radius: 16px;
+
+            text-decoration: none;
+
+            color: white;
+
+            font-weight: 600;
+
+            background: rgba(0, 255, 153, 0.12);
+
+            border: 1px solid rgba(0, 255, 153, 0.3);
+
+            transition: 0.3s;
+
+            backdrop-filter: blur(15px);
+        }
+
+        .cv-btn:hover {
+
+            transform: translateY(-4px);
+
+            background: rgba(0, 255, 153, 0.2);
+
+            border-color: rgba(0, 255, 153, 0.5);
+
+            box-shadow: 0 15px 30px rgba(0, 255, 153, 0.15);
+        }
+
+        .cv-btn i {
+
+            color: #00ff99;
+        }
+    </style>
+</head>
+
+<body>
+    
+
+    <div class="topbar">
+
+        <div class="logo">SandaruOS Applications</div>
+
+        <!-- TASKBAR APPS AREA -->
+        <div id="taskbar" style="display:flex; gap:10px; flex:1; justify-content:center;"></div>
+
+        <a href="home.html" class="back-btn">
+            ← Desktop
+        </a>
+
+    </div>
+
+    <section class="hero">
+        <h1>Applications Hub</h1>
+        <p>Explore all modules inside SandaruOS</p>
+    </section>
+
+    <div class="desktop">
+
+        <div class="app-icon" onclick="openAppWindow('aboutWindow','About Me')">
+            <img src="https://cdn-icons-png.flaticon.com/512/942/942748.png">
+            <span>About</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('projectsWindow','Projects')">
+            <img src="https://cdn-icons-png.flaticon.com/512/906/906334.png">
+            <span>Projects</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('skillsWindow','Skills')">
+            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721265.png">
+            <span>Skills</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('educationWindow','Education')">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png">
+            <span>Education</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('contactWindow','Contact')">
+            <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" style="filter: brightness(0) invert(1);">
+            <span>Contact</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('socialWindow','Social')">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+            <span>Social Media</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('achievementsWindow','Achievements')">
+            <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png">
+            <span>Achievements</span>
+        </div>
+
+        <div class="app-icon" onclick="openAppWindow('aiLabWindow','AI Lab')">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+            <span>AI Lab</span>
+        </div>
+
+    </div>
+
+    <div class="app-window" id="aboutWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                About Me Folder
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('aboutWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('aboutWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('aboutWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <div class="profile-section">
+
+                <img src="profile.jpeg" class="profile-image">
+
+                <div class="profile-info">
+
+                    <h1>Sandaru</h1>
+
+                    <h3>BSc IT Undergraduate • Full Stack Developer</h3>
+
+                </div>
+
+            </div>
+
+            <div class="about-box">
+
+                <p>
+                    Hi, I'm Sandaru! I'm an undergraduate student at SIBA Campus pursuing a Bachelor of Science in
+                    Information Technology (BSc IT). I am passionate about technology, programming, and creating
+                    innovative solutions to real-world problems. I am always looking for opportunities to learn and grow
+                    as a developer and a professional.
+
+                    I am also actively volunteering with the Zero Plastic Club, working alongside the SIBA Zero Plastic
+                    Community. As the president of this community, I am committed to leading efforts towards
+                    environmental sustainability. I enjoy singing, and I can play the violin, which adds to my creative
+                    skills. I also have a deep interest in video editing and graphic design, constantly looking for new
+                    ways to express myself and develop my skills. I am always eager to explore new things and take on
+                    challenges that will help me grow both personally and professionally.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PROJECTS WINDOW -->
+
+    <div class="app-window" id="projectsWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Projects Explorer
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('projectsWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('projectsWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('projectsWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="projects-main-title">
+                My Creative Projects
+            </h1>
+
+            <!-- CATEGORY 1 -->
+
+            <div class="project-category">
+
+                <button class="category-btn" onclick="toggleProjects('itProjects')">
+
+                    💻 IT Related Projects
+
+                </button>
+
+                <div class="projects-list" id="itProjects">
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_artificialintelligence-machinelearning-nlp-activity-7454552923633606657-id2L">
+
+                        IT Related AI Chatbot
+
+                    </a>
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_webdevelopment-javascript-frontend-activity-7453617549344407552-R-rp">
+
+                        Funny Login Page
+
+                    </a>
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_laravel-php-mysql-activity-7428016467297611776-__48">
+
+                        QR Base Attendance System
+
+                    </a>
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_selenium-automationtesting-java-activity-7414362018503286784-MJLB">
+
+                        Selenium Automation Testing
+
+                    </a>
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_financetracker-webdevelopment-php-activity-7384815437609525250-Stam">
+
+                        Finance Tracker
+
+                    </a>
+
+                    <a target="_blank"
+                        href="https://www.linkedin.com/posts/sandaru-wimansa_gamedevelopment-webdevelopment-javascript-activity-7331561008420843521-EImv">
+
+                        2D Web Game
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- CATEGORY 2 -->
+
+            <div class="project-category">
+
+                <button class="category-btn" onclick="toggleProjects('videoProjects')">
+
+                    🎬 Video Editing Projects
+
+                </button>
+
+                <div class="projects-list" id="videoProjects">
+
+                    <a target="_blank" href="https://www.facebook.com/share/v/1LuTmEJGFU/">
+
+                        Short Movie
+
+                    </a>
+
+                    <a target="_blank" href="https://youtu.be/UpI0KMX9WdM">
+
+                        Music Video
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/v/1AXdFX8Mc4/">
+
+                        Sri Gandharwa Kala Nikethanaya
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/r/1B4qamRWhP/">
+
+                        SIBA Campus Promotion
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/r/1BBbeKjx24/">
+
+                        SIBA Campus Awurudu
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/reel/1884983418821664/">
+
+                        SIBA Sixes
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/reel/737931435703360/">
+
+                        SIBA Campus Promotion 2
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/v/14ebEXiiFAh/">
+
+                        ZeroPlastic Club
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/reel/1242800081335160/">
+
+                        Kadugannawa Cleanup
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- CATEGORY 3 -->
+
+            <div class="project-category">
+
+                <button class="category-btn" onclick="toggleProjects('designProjects')">
+
+                    🎨 Graphic Designing Projects
+
+                </button>
+
+                <div class="projects-list" id="designProjects">
+
+                    <a target="_blank" href="https://www.facebook.com/share/1CkDrYZnqY/">
+
+                        ZeroPlastic 2026 Post
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/photo.php?fbid=676265598850003">
+
+                        Heeloya Cleanup
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/1Eg8ukJcvE/">
+
+                        Biology Class 1
+
+                    </a>
+
+                    <a target="_blank" href="https://www.facebook.com/share/1D4y8nJEjV/">
+
+                        Biology Class 2
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SKILLS WINDOW -->
+
+    <div class="app-window" id="skillsWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Skills Explorer
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('skillsWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('skillsWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('skillsWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="skills-main-title">
+                Skills & Expertise
+            </h1>
+
+            <div class="skills-grid">
+
+                <!-- SKILL 1 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">🌐</div>
+
+                    <h2>WEB DEV</h2>
+
+                    <p>
+                        Modern responsive websites and web apps with clean code and seamless UX.
+                    </p>
+
+                </div>
+
+                <!-- SKILL 2 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">🎨</div>
+
+                    <h2>UI / UX</h2>
+
+                    <p>
+                        Designing interfaces with deep focus on user flow and visual clarity.
+                    </p>
+
+                </div>
+
+                <!-- SKILL 3 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">✏️</div>
+
+                    <h2>GRAPHIC DESIGN</h2>
+
+                    <p>
+                        Visual content for events, social media, and community campaigns.
+                    </p>
+
+                </div>
+
+                <!-- SKILL 4 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">🎬</div>
+
+                    <h2>VIDEO EDITING</h2>
+
+                    <p>
+                        Cinematic edits for campus events, community programs and stories.
+                    </p>
+
+                </div>
+
+                <!-- SKILL 5 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">⚙️</div>
+
+                    <h2>BACK-END</h2>
+
+                    <p>
+                        Server-side logic, databases, and API integration for full-stack builds.
+                    </p>
+
+                </div>
+
+                <!-- SKILL 6 -->
+
+                <div class="skill-box">
+
+                    <div class="skill-icon">🌱</div>
+
+                    <h2>LEADERSHIP</h2>
+
+                    <p>
+                        President, Zero Plastic SIBA — driving environmental awareness on campus.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- EDUCATION WINDOW -->
+
+    <div class="app-window" id="educationWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Education Explorer
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('educationWindow')"></div>
+
+                <div class="control yellow"></div>
+
+                <div class="control green" onclick="maximizeWindow('educationWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="education-main-title">
+                My Education
+            </h1>
+
+            <!-- CURRENT EDUCATION -->
+
+            <div class="edu-box">
+
+                <h2>🎓 Current Education</h2>
+
+                <p>
+                    I am currently pursuing a BSc IT degree at SIBA Campus.
+                </p>
+
+            </div>
+
+            <!-- GPA TRANSCRIPT BUTTON -->
+
+            <div class="edu-box">
+
+                <h2>📊 Academic Transcript</h2>
+
+                <p style="margin-top:15px; line-height:1.8; opacity:0.85;">
+                    View my complete university academic performance,
+                    semester GPAs and subject results.
+                </p>
+
+                <a href="https://docs.google.com/spreadsheets/d/1OGEGMbZ49-G6dZOI6N8_L1ich54n5UF0V7HnO95-Hsc/edit?usp=sharing"
+                    target="_blank" class="transcript-btn">
+
+                    View Full Academic Transcript
+
+                </a>
+
+            </div>
+
+            <!-- CV DOWNLOAD -->
+
+            <div class="edu-box">
+
+                <h2>📄 Curriculum Vitae</h2>
+
+                <p style="margin-top:15px; line-height:1.8; opacity:0.85;">
+                    Download my latest IT Internship CV including
+                    technical skills, projects, certifications,
+                    leadership experience and academic background.
+                </p>
+
+                <a href="Sandaru Resume.pdf" download class="cv-btn">
+
+                    <i class="fas fa-download"></i>
+                    Download CV
+
+                </a>
+
+            </div>
+
+            <!-- AL RESULTS -->
+
+            <div class="edu-box">
+
+                <h2>📘 Advanced Level (AL) Results</h2>
+
+                <p class="exam-id">
+                    Index Number : 3622075
+                </p>
+
+                <table class="edu-table">
+
+                    <tr>
+                        <th>Subject</th>
+                        <th>Grade</th>
+                    </tr>
+
+                    <tr>
+                        <td>Biology</td>
+                        <td>S</td>
+                    </tr>
+
+                    <tr>
+                        <td>Chemistry</td>
+                        <td>C</td>
+                    </tr>
+
+                    <tr>
+                        <td>Physics</td>
+                        <td>S</td>
+                    </tr>
+
+                    <tr>
+                        <td>General English</td>
+                        <td>C</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <!-- OL RESULTS -->
+
+            <div class="edu-box">
+
+                <h2>📗 Ordinary Level (OL) Results</h2>
+
+                <p class="exam-id">
+                    Index Number : 74103954
+                </p>
+
+                <table class="edu-table">
+
+                    <tr>
+                        <th>Subject</th>
+                        <th>Grade</th>
+                    </tr>
+
+                    <tr>
+                        <td>Buddhism</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>Sinhala</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>Science</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>B</td>
+                    </tr>
+
+                    <tr>
+                        <td>ICT</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>Second Language (Tamil)</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>Music (Oriental)</td>
+                        <td>A</td>
+                    </tr>
+
+                    <tr>
+                        <td>History</td>
+                        <td>C</td>
+                    </tr>
+
+                    <tr>
+                        <td>English</td>
+                        <td>C</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <!-- OTHER QUALIFICATIONS -->
+
+            <div class="edu-box">
+
+                <h2>🏆 Other Qualifications</h2>
+
+                <ul class="qualification-list">
+
+                    <li>I am currently pursuing a BSc IT degree at SIBA Campus.</li>
+
+                    <li>I have completed a Makerspace Program conducted by American corner Kandy.</li>
+
+                    <li>I have completed a Certificate Course in English for School Leavers at Uva Wellassa University.
+                    </li>
+
+                    <li>I have completed an English Training Diploma Course at LREI.</li>
+
+                    <li>I have completed a Tamil Basic Course at LREL.</li>
+
+                    <li>I have completed a Certificate Course in Korean at LREI.</li>
+
+                    <li>I have completed a Computer Application Course at FITN.</li>
+
+                    <li>I have a Certificate in ICT Skills from IDM Nations Campus.</li>
+
+                    <li>I have completed an Office Application Course at the Computer Learning Center B/Sujatha M.M.V.
+                    </li>
+
+                    <li>I won the Art Competition at the Zone Level in Badulla.</li>
+
+                    <li>I have completed the First Year "Praveshika" Examination in Violin.</li>
+
+                    <li>I have passed the Dahampasala Finale Certificate Examination (2017).</li>
+
+                    <li>I hold a driving license for a bike, three-wheeler, and light vehicle.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CONTACT WINDOW -->
+
+    <div class="app-window" id="contactWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Contact Center
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('contactWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('contactWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('contactWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="contact-main-title">
+                Contact Me
+            </h1>
+
+            <p class="contact-subtitle">
+                Feel free to reach out to me using the following details:
+            </p>
+
+            <div class="contact-grid">
+
+                <!-- EMAIL -->
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h2>Email</h2>
+
+                    <a href="mailto:sandaruwimansa@gmail.com">
+                        sandaruwimansa@gmail.com
+                    </a>
+
+                </div>
+
+                <!-- PHONE -->
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp" style="color:#25D366;"></i>
+                    </div>
+
+                    <h2>WhatsApp</h2>
+
+                    <a href="https://wa.me/94703046406?text=Hi%20Sandaru%20👋" target="_blank">
+
+                        +94 70 30 46 406
+
+                    </a>
+
+                </div>
+
+                <!-- WEBSITE -->
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        🌐
+                    </div>
+
+                    <h2>LinkedIn</h2>
+
+                    <a href="https://www.linkedin.com/in/sandaruwimansa" target="_blank">
+                        linkedin.com/in/sandaruwimansa
+                    </a>
+
+                </div>
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fab fa-github"></i>
+                    </div>
+
+                    <h2>GitHub</h2>
+
+                    <a href="https://github.com/Sandaru20020102" target="_blank">
+
+                        github.com/Sandaru20020102
+
+                    </a>
+
+                </div>
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+
+                    <h2>Resume</h2>
+
+                    <a href="Sandaru Resume.pdf" target="_blank">
+                        Download CV
+                    </a>
+
+                </div>
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-location-dot"></i>
+                    </div>
+
+                    <h2>Location</h2>
+
+                    <a href="#">
+                        Badulla, Sri Lanka
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SOCIAL MEDIA WINDOW -->
+
+    <div class="app-window" id="socialWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Social Media Hub
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('socialWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('socialWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('socialWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="social-main-title">
+                Social Media
+            </h1>
+
+            <p class="social-subtitle">
+                Connect with me on all platforms.
+            </p>
+
+            <div class="social-grid">
+
+                <!-- LINKEDIN -->
+
+                <a href="https://www.linkedin.com/in/sandaru-wimansa/" target="_blank" class="social-card">
+
+                    <div class="social-icon linkedin">
+
+                        <i class="fab fa-linkedin-in"></i>
+
+                    </div>
+
+                    <div class="social-info">
+
+                        <h2>LinkedIn</h2>
+
+                        <p>
+                            Professional profile and career updates
+                        </p>
+
+                    </div>
+
+                </a>
+
+                <!-- GITHUB -->
+
+                <a href="https://github.com/Sandaru20020102" target="_blank" class="social-card">
+
+                    <div class="social-icon github">
+
+                        <i class="fab fa-github"></i>
+
+                    </div>
+
+                    <div class="social-info">
+
+                        <h2>GitHub</h2>
+
+                        <p>
+                            Explore my projects and repositories
+                        </p>
+
+                    </div>
+
+                </a>
+
+                <!-- FACEBOOK -->
+
+                <a href="https://web.facebook.com/sandaru.wimansaaththanayake" target="_blank" class="social-card">
+
+                    <div class="social-icon facebook">
+
+                        <i class="fab fa-facebook-f"></i>
+
+                    </div>
+
+                    <div class="social-info">
+
+                        <h2>Facebook</h2>
+
+                        <p>
+                            Personal updates and creative content
+                        </p>
+
+                    </div>
+
+                </a>
+
+                <!-- TIKTOK -->
+
+                <a href="https://www.tiktok.com/@sandaru_wimansa?_r=1&_t=ZS-96Yy5ZC0Gg8" target="_blank"
+                    class="social-card">
+
+                    <div class="social-icon tiktok">
+
+                        <i class="fab fa-tiktok"></i>
+
+                    </div>
+
+                    <div class="social-info">
+
+                        <h2>TikTok</h2>
+
+                        <p>
+                            Short videos and creative edits
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACHIEVEMENTS WINDOW -->
+
+    <div class="app-window" id="achievementsWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                Achievements Center
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('achievementsWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('achievementsWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('achievementsWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="achievements-title">
+                My Achievements
+            </h1>
+
+            <p class="achievements-subtitle">
+                Professional milestones, certifications, and recognized accomplishments.
+            </p>
+
+            <div class="achievements-list">
+
+                <!-- ITEM 1 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_makerspace-3ddesign-3dprinting-ugcPost-7411739797075193856-DuFV?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🏗️ MakerSpace Program
+
+                    <span>View Post →</span>
+
+                </a>
+
+                <!-- ITEM 2 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_zeroplastic-sibacampus-leadership-ugcPost-7432248931826180096-VoA9?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🎥 Best Videographer
+
+                    <span>View Post →</span>
+
+                </a>
+
+                <!-- ITEM 3 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_euphoria25-sibacampus-acting-activity-7311192723028381696-mUxl?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🎭 Best Performance by an Actor
+
+                    <span>View Post →</span>
+
+                </a>
+
+                <!-- ITEM 4 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_cisconetworkingacademy-itessentials-networking-activity-7356920241974624258-yi5e?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🌐 Cisco IT Essentials Certification
+
+                    <span>View Post →</span>
+
+                </a>
+
+                <!-- ITEM 5 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_i-had-the-opportunity-to-participate-in-the-activity-7372113148293672960-lfkw?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🎨 UI/UX Workshop Participation
+
+                    <span>View Post →</span>
+
+                </a>
+
+                <!-- ITEM 6 -->
+                <a class="achievement-item" target="_blank"
+                    href="https://www.linkedin.com/posts/sandaru-wimansa_zeroplastic-sibacampus-leadership-activity-7432248932925177858-X503?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEn29BQBaSnw6vBceSJLhW5apsCR0an0zaI">
+
+                    🏆 Project Excellence Award
+
+                    <span>View Post →</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AI LAB WINDOW -->
+
+    <div class="app-window" id="aiLabWindow">
+
+        <div class="window-header">
+
+            <div class="window-title">
+                AI Lab
+            </div>
+
+            <div class="window-controls">
+
+                <div class="control red" onclick="closeAppWindow('aiLabWindow')"></div>
+
+                <div class="control yellow" onclick="minimizeWindow('aiLabWindow')"></div>
+
+                <div class="control green" onclick="maximizeWindow('aiLabWindow')"></div>
+
+            </div>
+
+        </div>
+
+        <div class="window-content">
+
+            <h1 class="ai-title">
+                AI Research & Experiments
+            </h1>
+
+            <p class="ai-subtitle">
+                A collection of AI systems, chatbot experiments, and intelligent automation projects I am building.
+            </p>
+
+            <div class="ai-grid">
+
+                <!-- AI CHATBOT PROJECT (HUGGING FACE) -->
+                <a href="https://huggingface.co/spaces/sandaru20020020/it-ai-chatbot" target="_blank"
+                    style="text-decoration:none; color:inherit;">
+
+                    <div class="ai-card">
+
+                        <div class="ai-icon">🤖</div>
+
+                        <h2>IT Knowledge AI Chatbot</h2>
+
+                        <p>
+                            A Hugging Face Space AI chatbot that answers IT basic knowledge questions and helps students
+                            learn fundamentals interactively.
+                        </p>
+
+                    </div>
+
+                </a>
+
+                <!-- NLP EXPERIMENT -->
+                <div class="ai-card">
+
+                    <div class="ai-icon">🧠</div>
+
+                    <h2>NLP Experiments</h2>
+
+                    <p>
+                        Natural language processing tests for understanding user queries and improving response accuracy
+                        in AI systems.
+                    </p>
+
+                </div>
+
+                <!-- AUTOMATION ENGINE -->
+                <div class="ai-card">
+
+                    <div class="ai-icon">⚙️</div>
+
+                    <h2>Automation Engine</h2>
+
+                    <p>
+                        AI-powered workflow automation concepts for reducing manual tasks and improving productivity.
+                    </p>
+
+                </div>
+
+                <!-- DATA ANALYSIS AI -->
+                <div class="ai-card">
+
+                    <div class="ai-icon">📊</div>
+
+                    <h2>Data Intelligence AI</h2>
+
+                    <p>
+                        Experimental AI models designed to analyze patterns in student and finance data systems.
+                    </p>
+
+                </div>
+
+                <!-- RESEARCH LAB -->
+                <div class="ai-card">
+
+                    <div class="ai-icon">🔬</div>
+
+                    <h2>AI Research Lab</h2>
+
+                    <p>
+                        Exploration of machine learning ideas, future AI tools, and experimental intelligent systems.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        SandaruOS Applications Center • Version 2.0
+    </div>
+
+    <script>
+
+        /* OPEN WINDOW */
+
+        function openAppWindow(id) {
+
+            document.getElementById(id).style.display = 'block';
+
+        }
+
+        /* CLOSE WINDOW */
+
+        function closeAppWindow(id) {
+
+            document.getElementById(id).style.display = 'none';
+
+        }
+
+        /* MAXIMIZE WINDOW */
+
+        function maximizeWindow(id) {
+
+            document.getElementById(id).classList.toggle('maximized');
+
+        }
+
+        /* DRAGGABLE WINDOW */
+
+        const windows = document.querySelectorAll('.app-window');
+
+        windows.forEach(win => {
+
+            const header = win.querySelector('.window-header');
+
+            let isDragging = false;
+
+            let offsetX = 0;
+            let offsetY = 0;
+
+            header.addEventListener('mousedown', (e) => {
+
+                isDragging = true;
+
+                offsetX = e.clientX - win.offsetLeft;
+                offsetY = e.clientY - win.offsetTop;
+
+            });
+
+            document.addEventListener('mousemove', (e) => {
+
+                if (isDragging && !win.classList.contains('maximized')) {
+
+                    win.style.left = `${e.clientX - offsetX}px`;
+                    win.style.top = `${e.clientY - offsetY}px`;
+
+                }
+
+            });
+
+            document.addEventListener('mouseup', () => {
+
+                isDragging = false;
+
+            });
+
+        });
+
+        /* TOGGLE PROJECTS */
+
+        function toggleProjects(id) {
+
+            const list = document.getElementById(id);
+
+            if (list.style.display === 'flex') {
+
+                list.style.display = 'none';
+            }
+            else {
+
+                list.style.display = 'flex';
+
+            }
+
+        }
+
+        const taskbar = document.getElementById("taskbar");
+        const windowState = {};
+
+        function openAppWindow(id, title = id) {
+
+            const win = document.getElementById(id);
+            win.style.display = 'block';
+            win.classList.remove("minimized");
+
+            windowState[id] = { title };
+
+            updateTaskbar();
+        }
+
+        function closeAppWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'none';
+            win.classList.remove("minimized");
+
+            delete windowState[id];
+
+            updateTaskbar();
+        }
+
+        function minimizeWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'none';
+            win.classList.add("minimized");
+
+            updateTaskbar();
+        }
+
+        function maximizeWindow(id) {
+            document.getElementById(id).classList.toggle('maximized');
+        }
+
+        function restoreWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'block';
+            win.classList.remove("minimized");
+        }
+
+        function updateTaskbar() {
+            taskbar.innerHTML = "";
+
+            Object.keys(windowState).forEach(id => {
+                const btn = document.createElement("div");
+                btn.className = "task-btn";
+                btn.innerText = windowState[id].title;
+
+                btn.onclick = () => restoreWindow(id);
+
+                taskbar.appendChild(btn);
+            });
+        }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SandaruOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: #050505;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            height: 100vh;
+        }
+
+
+
+
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(0, 255, 140, 0.12), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(0, 153, 255, 0.12), transparent 30%),
+                #050505;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            pointer-events: auto;
+        }
+
+        .topbar {
+            position: fixed;
+            bottom: 0;
+            /* CHANGE THIS */
+            top: auto;
+            /* ADD THIS */
+
+            left: 0;
+            right: 0;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border-bottom: none;
+            /* CHANGE THIS */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            /* ADD THIS */
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 700;
+            color: #00ff99;
+        }
+
+        .clock {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .desktop-icons {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            z-index: 20;
+        }
+
+        .desktop-icons2 {
+            position: absolute;
+            top: 0px;
+            left: 100px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            z-index: 100;
+        }
+
+        .icon {
+            width: 70px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+        }
+
+        .icon img {
+            width: 65px;
+            height: 65px;
+        }
+
+        .icon div {
+            font-size: 11px;
+        }
+
+        .icon:hover {
+            transform: scale(1.08);
+        }
+
+
+
+        .window {
+            position: absolute;
+            width: 650px;
+            height: 420px;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: none;
+            animation: pop 0.3s ease;
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .window-header {
+            height: 45px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            cursor: move;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .control:hover {
+            transform: scale(1.15);
+        }
+
+        .red {
+            background: #ff5f57;
+        }
+
+        .yellow {
+            background: #febc2e;
+        }
+
+        .green {
+            background: #28c840;
+        }
+
+        .window-content {
+            padding: 20px;
+            height: calc(100% - 45px);
+            overflow-y: auto;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(0, 255, 153, 0.15);
+            color: #00ff99;
+            margin: 5px;
+            font-size: 13px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 255, 153, 0.3);
+        }
+
+        .project-card h3 {
+            margin-bottom: 10px;
+            color: #00ff99;
+        }
+
+        .terminal {
+            background: black;
+            color: #00ff99;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .terminal-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .terminal-input span {
+            margin-right: 10px;
+        }
+
+        .terminal-input input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #00ff99;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .notification {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: rgba(0, 255, 153, 0.15);
+            border: 1px solid rgba(0, 255, 153, 0.3);
+            padding: 15px 20px;
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            transform: translateX(400px);
+            transition: 0.5s;
+            z-index: 9999;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .stat h2 {
+            color: #00ff99;
+            margin-bottom: 10px;
+        }
+
+        .wallpaper-glow {
+            pointer-events: none;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(0, 255, 153, 0.08);
+            filter: blur(100px);
+            top: -100px;
+            left: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+
+        .start-btn {
+            position: relative;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            color: #00ff99;
+
+            padding: 10px 20px;
+            border-radius: 16px;
+
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+
+            cursor: pointer;
+
+            transition: all 0.35s ease;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Glass shine effect */
+        .start-btn::before {
+            content: '';
+
+            position: absolute;
+            top: 0;
+            left: -120%;
+
+            width: 100%;
+            height: 100%;
+
+            background: linear-gradient(120deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.18),
+                    transparent);
+
+            transition: 0.6s;
+        }
+
+        /* Hover */
+        .start-btn:hover {
+
+            transform: translateY(-3px) scale(1.03);
+
+            background: rgba(0, 255, 153, 0.12);
+
+            border-color: rgba(0, 255, 153, 0.35);
+
+            box-shadow:
+                0 15px 35px rgba(0, 255, 153, 0.18),
+                0 10px 25px rgba(0, 0, 0, 0.4);
+
+            color: white;
+        }
+
+        .start-btn:hover::before {
+            left: 120%;
+        }
+
+        /* Click effect */
+        .start-btn:active {
+            transform: scale(0.96);
+        }
+
+        .start-header {
+            margin-bottom: 20px;
+        }
+
+        .start-header h2 {
+            color: #00ff99;
+            margin-bottom: 5px;
+        }
+
+        .start-header p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .start-apps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .start-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .start-item:hover {
+            background: rgba(0, 255, 153, 0.12);
+            border-color: rgba(0, 255, 153, 0.25);
+            transform: translateX(5px);
+        }
+
+        .start-item img {
+            width: 38px;
+            height: 38px;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(30px);
+            }
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        @media(max-width: 768px) {
+            .window {
+                width: 95vw;
+                height: 75vh;
+                left: 2.5vw !important;
+                top: 80px !important;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
+        }
+
+        .contact-icon img {
+            filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(0, 255, 153, 0.4));
+        }
+
+        .taskbar {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .task-item:hover {
+            background: rgba(0, 255, 153, 0.12);
+            border-color: rgba(0, 255, 153, 0.3);
+        }
+
+        .task-active {
+            border-color: #00ff99;
+            background: rgba(0, 255, 153, 0.15);
+        }
+
+        /* CSS */
+        .charw {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 400px;
+            height: 400px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #char-canvas {
+            width: 400px;
+            height: 400px;
+            display: block;
+        }
+
+        .internship-panel {
+
+            position: absolute;
+
+            right: 35px;
+            top: 46%;
+
+            transform: translateY(-50%);
+
+            width: 340px;
+
+            max-height: calc(100vh - 120px);
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            padding: 24px;
+
+            border-radius: 26px;
+
+            background: rgba(255, 255, 255, 0.05);
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 15px 50px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+            z-index: 20;
+
+            animation: floatPanel 5s ease-in-out infinite;
+        }
+
+        /* CUSTOM SCROLLBAR */
+
+        .internship-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .internship-panel::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 153, 0.4);
+            border-radius: 20px;
+        }
+
+        .internship-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* =========================
+   INTERNSHIP PANEL
+========================= */
+
+
+        .internship-glow {
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            background: rgba(0, 255, 153, 0.12);
+
+            filter: blur(80px);
+
+            top: -120px;
+            right: -100px;
+
+            border-radius: 50%;
+        }
+
+        .internship-header {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #00ff99;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        .live-dot {
+
+            width: 10px;
+            height: 10px;
+
+            background: #00ff99;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 10px #00ff99;
+
+            animation: pulse 1.5s infinite;
+        }
+
+        .internship-panel h2 {
+
+            font-size: 34px;
+
+            line-height: 1.1;
+
+            margin-bottom: 16px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .internship-text {
+
+            line-height: 1.8;
+
+            opacity: .8;
+
+            margin-bottom: 25px;
+        }
+
+        .internship-tags {
+
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+
+            margin-bottom: 28px;
+        }
+
+        .internship-tags span {
+
+            padding: 8px 14px;
+
+            border-radius: 999px;
+
+            background: rgba(0, 255, 153, 0.12);
+
+            border: 1px solid rgba(0, 255, 153, 0.2);
+
+            color: #00ff99;
+
+            font-size: 13px;
+        }
+
+        .internship-info {
+
+            display: grid;
+
+            grid-template-columns: 1fr;
+
+            gap: 14px;
+
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+
+            padding: 14px;
+
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .info-box h3 {
+
+            font-size: 13px;
+
+            opacity: .7;
+
+            margin-bottom: 6px;
+        }
+
+        .info-box p {
+
+            color: #00ff99;
+
+            font-weight: 600;
+        }
+
+        .hire-btn {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 18px;
+
+            background: linear-gradient(90deg, #00ff99, #00bfff);
+
+            color: black;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .hire-btn:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
+        }
+
+        @keyframes pulse {
+
+            0% {
+                opacity: .5;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+
+            100% {
+                opacity: .5;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes floatPanel {
+
+            0%,
+            100% {
+                transform: translateY(-50%);
+            }
+
+            50% {
+                transform: translateY(calc(-50% - 10px));
+            }
+        }
+
+        /* MOBILE */
+        @media(max-width:1100px) {
+
+            .internship-panel {
+
+                position: relative;
+
+                top: auto;
+                right: auto;
+
+                transform: none;
+
+                width: 90%;
+
+                margin: 40px auto;
+
+                animation: none;
+            }
+
+            .charw {
+
+                position: relative;
+
+                top: auto;
+                left: auto;
+
+                transform: none;
+
+                margin: 40px auto;
+            }
+        }
+
+        #systemTray {
+            padding-left: 10px;
+            opacity: 0.9;
+        }
+
+        #systemTray span {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body>
+    
+
+
+
+    <div class="desktop" id="desktop">
+
+
+        <div class="wallpaper-glow"></div>
+
+
+
+        <div class="topbar">
+
+            <div style="display:flex; align-items:center; gap:15px;">
+
+                <button class="start-btn" onclick="window.location.href='apps.html'">
+                    🪟 More Details
+                </button>
+
+                <div class="logo">Sandaru Wimansa Aththanayaka</div>
+
+            </div>
+
+            <!-- TASKBAR ICONS -->
+            <!-- LEFT SYSTEM INFO (NEW) -->
+            <div id="systemTray" style="display:flex; gap:15px; align-items:center; color:white; font-size:13px;"></div>
+
+            <!-- CENTER TASKBAR APPS -->
+            <div id="taskbar" style="display:flex; gap:10px; flex:1; justify-content:center;"></div>
+
+            <div class="clock" id="clock"></div>
+
+        </div>
+
+
+
+        <div class="desktop-icons" style="position:relative; z-index:20;">
+
+            <div class="icon" onclick="openWindow('aboutWindow')">
+                <img src="https://cdn-icons-png.flaticon.com/512/942/942748.png">
+                <div>About</div>
+            </div>
+
+            <div class="icon" onclick="openWindow('projectsWindow')">
+                <img src="https://cdn-icons-png.flaticon.com/512/906/906334.png">
+                <div>Projects</div>
+            </div>
+
+            <div class="icon" onclick="openWindow('skillsWindow')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2721/2721265.png">
+                <div>Skills</div>
+            </div>
+
+            <div class="icon" onclick="openWindow('terminalWindow')">
+                <img src="https://cdn-icons-png.flaticon.com/512/906/906324.png">
+                <div>Terminal</div>
+            </div>
+
+            <div class="icon contact-icon" onclick="openWindow('contactWindow')">
+                <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
+                <div>Contact</div>
+            </div>
+
+
+        </div>
+
+        <!-- ABOUT WINDOW -->
+        <div class="window" id="aboutWindow" style="left:220px; top:90px;">
+            <div class="window-header">
+                <div>About Sandaru</div>
+                <div class="window-controls">
+                    <div class="control red" onclick="closeWindow('aboutWindow')"></div>
+
+                    <div class="control yellow" onclick="minimizeWindow('aboutWindow')">
+                    </div>
+
+                    <div class="control green" onclick="maximizeWindow('aboutWindow')">
+                    </div>
+                </div>
+            </div>
+
+            <div class="window-content">
+                <h1 class="hero-title">Sandaru</h1>
+                <p style="margin-bottom:20px; line-height:1.8;">
+                    Full Stack Developer & AI Researcher passionate about futuristic UI systems,
+                    AI tools, PHP development, modern web apps and interactive user experiences.
+                </p>
+
+                <div>
+                    <span class="tag">PHP</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">React</span>
+                    <span class="tag">AI</span>
+                    <span class="tag">MySQL</span>
+                    <span class="tag">TailwindCSS</span>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <h2>10+</h2>
+                        <p>Projects</p>
+                    </div>
+
+                    <div class="stat">
+                        <h2>5+</h2>
+                        <p>Technologies</p>
+                    </div>
+
+                    <div class="stat">
+                        <h2>100%</h2>
+                        <p>Creative UI</p>
+                    </div>
+                </div>
+
+                <div class="footer-note">
+                    SandaruOS v2.0 • Powered by creativity & caffeine ☕
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECTS WINDOW -->
+        <div class="window" id="projectsWindow" style="left:300px; top:120px;">
+            <div class="window-header">
+                <div>Projects Explorer</div>
+                <div class="window-controls">
+                    <div class="control red" onclick="closeWindow('projectsWindow')"></div>
+                    <div class="control yellow" onclick="minimizeWindow('projectsWindow')"></div>
+                    <div class="control green" onclick="maximizeWindow('projectsWindow')"></div>
+                </div>
+            </div>
+
+            <div class="window-content">
+
+                <div class="project-card">
+    <h3>Finance Tracker System</h3>
+    <p>
+        A full-stack money management system built using MongoDB, PHP, CSS, and JavaScript.
+        Features glass UI design, dynamic themes, analytics dashboard, emergency fund tracking,
+        and smart financial suggestions.
+    </p>
+</div>
+
+<div class="project-card">
+    <h3>QR-Based Attendance System</h3>
+    <p>
+        Developed using Laravel and MySQL. Students can scan QR codes to mark attendance,
+        while lecturers can generate one-time QR codes for secure and automated attendance tracking.
+    </p>
+</div>
+
+<div class="project-card">
+    <h3>IoT Smart Trash Bin</h3>
+    <p>
+        An intelligent IoT-based system that detects dry and wet waste and automatically separates
+        it into the correct bin using sensors and smart classification logic.
+    </p>
+</div>
+
+<div class="project-card">
+    <h3>AI ChatBot (IT Knowledge Assistant)</h3>
+    <p>
+        An AI-powered chatbot designed to answer basic IT knowledge questions.
+        Built using datasets from Kaggle and deployed using Hugging Face for interactive learning support.
+    </p>
+</div>
+
+            </div>
+        </div>
+
+        <!-- SKILLS WINDOW -->
+        <div class="window" id="skillsWindow" style="left:260px; top:100px;">
+            <div class="window-header">
+                <div>Developer Skills</div>
+                <div class="window-controls">
+                    <div class="control red" onclick="closeWindow('skillsWindow')"></div>
+                    <div class="control yellow" onclick="minimizeWindow('skillsWindow')"></div>
+                    <div class="control green" onclick="maximizeWindow('skillsWindow')"></div>
+                </div>
+            </div>
+
+            <div class="window-content">
+
+                <div class="project-card">
+                   <h3>Frontend Development</h3>
+    <p>
+        HTML, CSS, JavaScript, React, Angular
+    </p>
+</div>
+
+<div class="project-card">
+    <h3>Backend Development</h3>
+    <p>
+        PHP, Laravel, MySQL, MongoDB, REST APIs, Authentication Systems
+    </p>
+</div>
+
+                <div class="project-card">
+                    <h3>UI / UX Design</h3>
+                    <p>Glassmorphism, futuristic interfaces, animations and responsive systems.</p>
+                </div>
+
+                <div class="project-card">
+                    <h3>AI & Innovation</h3>
+                    <p>AI tools, automation systems and intelligent web experiences.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TERMINAL -->
+        <div class="window" id="terminalWindow" style="left:350px; top:120px;">
+            <div class="window-header">
+                <div>Terminal</div>
+                <div class="window-controls">
+                    <div class="control red" onclick="closeWindow('terminalWindow')"></div>
+                    <div class="control yellow" onclick="minimizeWindow('terminalWindow')"></div>
+                    <div class="control green" onclick="maximizeWindow('terminalWindow')"></div>
+                </div>
+            </div>
+
+            <div class="terminal" id="terminal">
+                <div>Welcome to SandaruOS Terminal</div>
+                <div>Type <strong>help</strong> to begin.</div>
+
+                <div class="terminal-input">
+                    <span>>></span>
+                    <input type="text" id="terminalInput" autofocus>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="window" id="contactWindow" style="left:280px; top:110px;">
+            <div class="window-header">
+                <div>Contact</div>
+                <div class="window-controls">
+                    <div class="control red" onclick="closeWindow('contactWindow')"></div>
+                    <div class="control yellow" onclick="minimizeWindow('contactWindow')"></div>
+                    <div class="control green" onclick="maximizeWindow('contactWindow')"></div>
+                </div>
+            </div>
+
+            <div class="window-content">
+
+                <h1 class="hero-title">Let's Connect</h1>
+
+                <div class="project-card">
+                    <h3>Email</h3>
+                    <p>sandaruwimansa@gmail.com</p>
+                </div>
+
+                <div class="project-card">
+                    <h3>Phone or WhatsApp</h3>
+                    <p>+94 70 304 6406 / +94 72 677 6504</p>
+                </div>
+
+                <div class="project-card">
+                    <h3>Address</h3>
+                    <p>No 473, Passara road, Hindagoda, Badulla, SriLanka.</p>
+                </div>
+
+                <div class="project-card">
+                    <h3>Availability</h3>
+                    <p>Open for freelance and creative collaborations.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HTML -->
+        <div class="charw">
+            <canvas id="char-canvas" width="400" height="400"></canvas>
+        </div>
+
+        <!-- INTERNSHIP PANEL -->
+        <div class="internship-panel">
+
+            <div class="internship-glow"></div>
+
+            <div class="internship-header">
+                <div class="live-dot"></div>
+                AVAILABLE FOR INTERNSHIP
+            </div>
+
+            <h2>Internship</h2>
+
+            <p class="internship-text">
+                Currently searching for internship opportunities in
+                Software Engineering, Full Stack Development,
+                UI/UX Engineering and AI-based systems.
+            </p>
+
+            <div class="internship-tags">
+                <span>PHP</span>
+                <span>JavaScript</span>
+                <span>React</span>
+                <span>MySQL</span>
+                <span>AI</span>
+            </div>
+
+            <div class="internship-info">
+
+                <div class="info-box">
+                    <h3>Status</h3>
+                    <p>Open to Work</p>
+                </div>
+
+                <div class="info-box">
+                    <h3>Experience</h3>
+                    <p>Projects & Self Learning</p>
+                </div>
+
+                <div class="info-box">
+                    <h3>Location</h3>
+                    <p>Sri Lanka</p>
+                </div>
+
+            </div>
+
+            <button class="hire-btn" onclick="openWindow('contactWindow')">
+                Contact Me
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const windows = {
+            aboutWindow: { title: "About", icon: "👤", state: "closed" },
+            projectsWindow: { title: "Projects", icon: "📁", state: "closed" },
+            skillsWindow: { title: "Skills", icon: "⚡", state: "closed" },
+            terminalWindow: { title: "Terminal", icon: "⌨️", state: "closed" },
+            contactWindow: { title: "Contact", icon: "📧", state: "closed" }
+        };
+
+
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerHTML = now.toLocaleString();
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function openWindow(id) {
+            const win = document.getElementById(id);
+
+            win.style.display = "block";
+            win.style.zIndex = Date.now();
+
+            windows[id].state = "open";
+
+            renderTaskbar();
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = "none";
+
+            windows[id].state = "closed";
+
+            renderTaskbar();
+        }
+
+        // DRAG WINDOWS
+        let highestZ = 100;
+
+        document.querySelectorAll('.window').forEach(win => {
+
+            const header = win.querySelector('.window-header');
+
+            let isDragging = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            win.addEventListener('mousedown', () => {
+                highestZ++;
+                win.style.zIndex = highestZ;
+            });
+
+            header.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - win.offsetLeft;
+                offsetY = e.clientY - win.offsetTop;
+                highestZ++;
+                win.style.zIndex = highestZ;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    win.style.left = `${e.clientX - offsetX}px`;
+                    win.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+        });
+
+        // TERMINAL
+        const input = document.getElementById('terminalInput');
+        const terminal = document.getElementById('terminal');
+
+        input.addEventListener('keydown', function (e) {
+
+            if (e.key === 'Enter') {
+
+                const command = input.value.toLowerCase();
+
+                const line = document.createElement('div');
+                line.innerHTML = `>> ${command}`;
+                terminal.insertBefore(line, input.parentElement);
+
+                const output = document.createElement('div');
+                output.style.marginBottom = '10px';
+
+               
+                if (command === 'help') {
+                    output.innerHTML = 'Commands: about, skills, projects, contact, clear, whoami';
+                }
+                else if (command === 'about') {
+                    output.innerHTML = 'Sandaru - Full Stack Developer & AI Researcher';
+                }
+                else if (command === 'skills') {
+                    output.innerHTML = 'PHP, JavaScript, MongoDB, AI, MySQL';
+                }
+                else if (command === 'projects') {
+                    output.innerHTML = 'Finance Tracker, AI-ChatBot, Smart DustBin (IOT)';
+                }
+                else if (command === 'contact') {
+                    output.innerHTML = 'Email: sandaruwimansa@gmail.com';
+                }
+                else if (command === 'whoami') {
+                    output.innerHTML = 'I am Sandaru Wimansa, a passionate developer and AI enthusiast creating futuristic web experiences.';
+                }
+                else if (command === 'clear') {
+                    terminal.innerHTML = `
+          <div>Welcome to SandaruOS Terminal</div>
+          <div>Type <strong>"help"</strong> to begin.</div>
+          <div class="terminal-input">
+            <span>>></span>
+            <input type="text" id="terminalInput" autofocus>
+          </div>
+        `;
+                    location.reload();
+                }
+                else {
+                    output.innerHTML = 'Command not found.';
+                }
+
+                terminal.insertBefore(output, input.parentElement);
+                input.value = '';
+                terminal.scrollTop = terminal.scrollHeight;
+
+            }
+
+        });
+
+        /* JAVASCRIPT - 3D CHARACTER WITH EYES FOLLOWING CURSOR */
+
+        const cc = document.getElementById('char-canvas');
+
+        if (cc) {
+
+            const c = cc.getContext('2d');
+
+            const W = 400;
+            const H = 400;
+
+            let cmx = 200;
+            let cmy = 200;
+
+            let lx = 0;
+            let ly = 0;
+
+            let t = 0;
+
+            document.addEventListener('mousemove', e => {
+
+                const r = cc.getBoundingClientRect();
+
+                cmx = e.clientX - r.left;
+                cmy = e.clientY - r.top;
+
+            });
+
+            function L(a, b, t2) {
+                return a + (b - a) * t2;
+            }
+
+            function draw() {
+
+                c.clearRect(0, 0, W, H);
+
+                t += .022;
+
+                const fo = Math.sin(t) * 11;
+
+                lx = L(lx, (cmx - W / 2) / (W / 2), .075);
+                ly = L(ly, (cmy - H / 2 - fo) / (H / 2), .075);
+
+                const ox = W / 2;
+                const oy = H / 2 + 22 + fo;
+
+                /* SHADOW */
+                const sg = c.createRadialGradient(ox, oy + 140, 0, ox, oy + 140, 70);
+
+                sg.addColorStop(0, 'rgba(255,255,255,.07)');
+                sg.addColorStop(1, 'transparent');
+
+                c.fillStyle = sg;
+
+                c.beginPath();
+                c.ellipse(ox, oy + 144, 62, 15, 0, 0, Math.PI * 2);
+                c.fill();
+
+                /* BODY GLOW */
+                const bg = c.createRadialGradient(ox, oy + 42, 0, ox, oy + 42, 88);
+
+                bg.addColorStop(0, 'rgba(255,255,255,.04)');
+                bg.addColorStop(1, 'transparent');
+
+                c.fillStyle = bg;
+
+                c.beginPath();
+                c.ellipse(ox, oy + 42, 84, 92, 0, 0, Math.PI * 2);
+                c.fill();
+
+                /* TORSO */
+                c.save();
+
+                c.beginPath();
+
+                c.moveTo(ox - 50, oy + 18);
+                c.quadraticCurveTo(ox - 60, oy + 84, ox - 36, oy + 136);
+
+                c.lineTo(ox + 36, oy + 136);
+
+                c.quadraticCurveTo(ox + 60, oy + 84, ox + 50, oy + 18);
+
+                c.closePath();
+
+                const tg = c.createLinearGradient(ox - 60, oy + 18, ox + 60, oy + 136);
+
+                tg.addColorStop(0, '#1c1c1c');
+                tg.addColorStop(1, '#0d0d0d');
+
+                c.fillStyle = tg;
+                c.fill();
+
+                c.restore();
+
+                /* NECK */
+                c.save();
+
+                c.beginPath();
+
+                c.moveTo(ox - 14, oy - 18);
+                c.lineTo(ox + 14, oy - 18);
+                c.lineTo(ox + 12, oy + 4);
+                c.lineTo(ox - 12, oy + 4);
+
+                c.closePath();
+
+                c.fillStyle = '#d4a870';
+                c.fill();
+
+                c.restore();
+
+                /* HEAD */
+                c.save();
+
+                c.beginPath();
+
+                c.ellipse(ox, oy - 54, 52, 56, 0, 0, Math.PI * 2);
+
+                const sk = c.createRadialGradient(ox - 10, oy - 76, 4, ox, oy - 54, 56);
+
+                sk.addColorStop(0, '#f0cfa0');
+                sk.addColorStop(.6, '#e0b888');
+                sk.addColorStop(1, '#cc9060');
+
+                c.fillStyle = sk;
+                c.fill();
+
+                c.restore();
+
+                /* HAIR */
+                c.save();
+
+                c.beginPath();
+
+                c.moveTo(ox - 52, oy - 66);
+
+                c.bezierCurveTo(
+                    ox - 54, oy - 124,
+                    ox - 18, oy - 126,
+                    ox - 8, oy - 122
+                );
+
+                c.bezierCurveTo(
+                    ox + 10, oy - 131,
+                    ox + 48, oy - 124,
+                    ox + 52, oy - 76
+                );
+
+                c.bezierCurveTo(
+                    ox + 50, oy - 96,
+                    ox + 28, oy - 114,
+                    ox, oy - 114
+                );
+
+                c.bezierCurveTo(
+                    ox - 20, oy - 114,
+                    ox - 42, oy - 100,
+                    ox - 52, oy - 66
+                );
+
+                c.closePath();
+
+                c.fillStyle = '#111';
+                c.fill();
+
+                c.restore();
+
+                /* EYEBROWS */
+                const bx = lx * 3;
+
+                c.save();
+
+                c.strokeStyle = '#111';
+                c.lineWidth = 2.2;
+                c.lineCap = 'round';
+
+                c.beginPath();
+
+                c.moveTo(ox - 28 + bx, oy - 72);
+                c.quadraticCurveTo(ox - 18 + bx, oy - 76, ox - 8 + bx, oy - 72);
+
+                c.stroke();
+
+                c.beginPath();
+
+                c.moveTo(ox + 8 + bx, oy - 72);
+                c.quadraticCurveTo(ox + 18 + bx, oy - 76, ox + 28 + bx, oy - 72);
+
+                c.stroke();
+
+                c.restore();
+
+                /* EYES */
+                const elx = ox - 19 + lx * 5;
+                const erx = ox + 19 + lx * 5;
+                const ey = oy - 56 + ly * 4;
+
+                const px = lx * 4;
+                const py = ly * 3;
+
+                c.save();
+
+                /* Eye whites */
+                [elx, erx].forEach(ex4 => {
+
+                    c.beginPath();
+
+                    c.ellipse(ex4, ey, 11, 9.5, 0, 0, Math.PI * 2);
+
+                    c.fillStyle = '#fff';
+                    c.fill();
+
+                    c.strokeStyle = 'rgba(0,0,0,.1)';
+                    c.lineWidth = .5;
+
+                    c.stroke();
+
+                });
+
+                /* Pupils */
+                [elx, erx].forEach(ex4 => {
+
+                    const ipx = ex4 + px;
+                    const ipy = ey + py;
+
+                    c.beginPath();
+
+                    c.arc(ipx, ipy, 6.5, 0, Math.PI * 2);
+
+                    const ig = c.createRadialGradient(ipx - 1, ipy - 1, 0, ipx, ipy, 6.5);
+
+                    ig.addColorStop(0, '#4a90d9');
+                    ig.addColorStop(.5, '#1a5fa0');
+                    ig.addColorStop(1, '#0a2860');
+
+                    c.fillStyle = ig;
+                    c.fill();
+
+                    c.beginPath();
+                    c.arc(ipx, ipy, 3.2, 0, Math.PI * 2);
+
+                    c.fillStyle = '#000';
+                    c.fill();
+
+                    c.beginPath();
+                    c.arc(ipx - 2, ipy - 2, 1.8, 0, Math.PI * 2);
+
+                    c.fillStyle = 'rgba(255,255,255,.92)';
+                    c.fill();
+
+                    c.beginPath();
+
+                    c.moveTo(ex4 - 11, ey);
+
+                    c.quadraticCurveTo(
+                        ex4,
+                        ey - 10,
+                        ex4 + 11,
+                        ey
+                    );
+
+                    c.strokeStyle = '#111';
+                    c.lineWidth = 1.4;
+
+                    c.stroke();
+
+                });
+
+                c.restore();
+
+                /* GLASSES */
+                c.save();
+
+                c.strokeStyle = 'rgba(255,255,255,.3)';
+                c.lineWidth = 1.3;
+
+                c.beginPath();
+
+                if (c.roundRect) {
+                    c.roundRect(elx - 14, ey - 12, 24, 17, 4);
+                } else {
+                    c.rect(elx - 14, ey - 12, 24, 17);
+                }
+
+                c.stroke();
+
+                c.beginPath();
+
+                if (c.roundRect) {
+                    c.roundRect(erx - 14, ey - 12, 24, 17, 4);
+                } else {
+                    c.rect(erx - 14, ey - 12, 24, 17);
+                }
+
+                c.stroke();
+
+                c.beginPath();
+
+                c.moveTo(elx + 10, ey - 3);
+                c.lineTo(erx - 14, ey - 3);
+
+                c.stroke();
+
+                c.restore();
+
+                /* NOSE */
+                c.save();
+
+                c.strokeStyle = 'rgba(130,75,28,.32)';
+                c.lineWidth = 1.3;
+                c.lineCap = 'round';
+
+                c.beginPath();
+
+                c.moveTo(ox + lx * 2, oy - 42);
+
+                c.quadraticCurveTo(
+                    ox + 3 + lx * 2,
+                    oy - 32,
+                    ox + 1 + lx * 2,
+                    oy - 25
+                );
+
+                c.stroke();
+
+                c.restore();
+
+                /* MOUTH */
+                c.save();
+
+                c.strokeStyle = '#906050';
+                c.lineWidth = 1.8;
+                c.lineCap = 'round';
+
+                c.beginPath();
+
+                c.moveTo(ox - 12, oy - 13);
+
+                c.quadraticCurveTo(
+                    ox,
+                    oy - 7,
+                    ox + 12,
+                    oy - 13
+                );
+
+                c.stroke();
+
+                c.restore();
+
+                /* FLOATING ICONS */
+                [
+                    { a: t * .35, r: 148, em: '💻', s: 20 },
+                    { a: t * .35 + Math.PI * .7, r: 144, em: '🎨', s: 18 },
+                    { a: t * .35 + Math.PI * 1.36, r: 152, em: '⚡', s: 16 }
+                ]
+                    .forEach(ic => {
+
+                        const ix = ox + Math.cos(ic.a) * ic.r;
+                        const iy = (H / 2 + 22) + Math.sin(ic.a) * ic.r * .37;
+
+                        c.font = `${ic.s}px serif`;
+
+                        c.textAlign = 'center';
+                        c.textBaseline = 'middle';
+
+                        c.globalAlpha = .52;
+
+                        c.fillText(ic.em, ix, iy);
+
+                        c.globalAlpha = 1;
+
+                    });
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+
+        function toggleStartMenu() {
+
+            const menu = document.getElementById('startMenu');
+
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            }
+            else {
+                menu.style.display = 'block';
+            }
+
+        }
+
+        window.addEventListener('click', function (e) {
+
+            const menu = document.getElementById('startMenu');
+            const button = document.querySelector('.start-btn');
+
+            if (
+                !menu.contains(e.target) &&
+                !button.contains(e.target)
+            ) {
+                menu.style.display = 'none';
+            }
+
+        });
+
+        function minimizeWindow(id) {
+            const win = document.getElementById(id);
+
+            win.style.display = "none";
+
+            windows[id].state = "minimized";
+
+            renderTaskbar();
+        }
+
+        function renderTaskbar() {
+            const taskbar = document.getElementById("taskbar");
+            taskbar.innerHTML = "";
+
+            Object.keys(windows).forEach(id => {
+                const w = windows[id];
+
+                if (w.state !== "closed") {
+
+                    const item = document.createElement("div");
+                    item.className = "task-item";
+
+                    if (w.state === "open") {
+                        item.style.border = "1px solid #00ff99";
+                    }
+
+                    item.innerHTML = `${w.icon} ${w.title}`;
+
+                    item.onclick = () => {
+                        const win = document.getElementById(id);
+
+                        win.style.display = "block";
+                        win.style.zIndex = Date.now();
+
+                        windows[id].state = "open";
+
+                        renderTaskbar();
+                    };
+
+                    taskbar.appendChild(item);
+                }
+            });
+        }
+
+        window.addEventListener("load", () => {
+            document.getElementById("desktop").style.display = "block";
+            renderTaskbar();
+        });
+
+        function maximizeWindow(id) {
+            const win = document.getElementById(id);
+
+            // if already maximized → restore
+            if (win.dataset.maximized === "true") {
+                win.style.width = win.dataset.oldWidth;
+                win.style.height = win.dataset.oldHeight;
+                win.style.left = win.dataset.oldLeft;
+                win.style.top = win.dataset.oldTop;
+
+                win.dataset.maximized = "false";
+            }
+            else {
+                // save current size & position
+                win.dataset.oldWidth = win.style.width;
+                win.dataset.oldHeight = win.style.height;
+                win.dataset.oldLeft = win.style.left;
+                win.dataset.oldTop = win.style.top;
+
+                // maximize
+                win.style.left = "0";
+                win.style.top = "0";
+                win.style.height = "calc(100vh - 45px)";
+                win.style.width = "100vw";
+
+
+                win.dataset.maximized = "true";
+            }
+
+            win.style.display = "block";
+            win.style.zIndex = Date.now();
+
+            windows[id].state = "open";
+            renderTaskbar();
+        }
+
+        const systemTray = document.getElementById("systemTray");
+
+        // FAKE SYSTEM VALUES (you can later connect real system monitor)
+        let cpu = 0;
+        let ram = 0;
+
+        // UPDATE SYSTEM VALUES
+        function updateTaskbarSystem() {
+
+            // fake smooth animation
+            cpu = Math.floor(Math.random() * 60 + 10);
+            ram = Math.floor(Math.random() * 70 + 20);
+
+            const now = new Date().toLocaleTimeString();
+
+            let batteryText = "🔋 --";
+            let networkText = navigator.onLine ? "🟢" : "🔴";
+
+            // battery API
+            if (navigator.getBattery) {
+                navigator.getBattery().then(b => {
+                    batteryText = "🔋 " + Math.floor(b.level * 100) + "%";
+                });
+            }
+
+            systemTray.innerHTML = `
+                <span>🧠 CPU ${cpu}%</span>
+        <span>💾 RAM ${ram}%</span>
+        <span>${batteryText}</span>
+        <span>📡 ${networkText}</span>
+    `;
+        }
+
+        // RUN EVERY 1 SECOND
+        setInterval(updateTaskbarSystem, 1000);
+
+        // INIT
+        updateTaskbarSystem();
+    </script>
+
+</body>
+
+</html>
