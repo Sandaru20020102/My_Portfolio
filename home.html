@@ -835,6 +835,9 @@
                 <button class="start-btn" onclick="window.location.href='apps.html'">
                     🪟 More Details
                 </button>
+                <button class="start-btn" onclick="openGamesHub()">
+    🎮 Games
+</button>
 
                 <div class="logo">Sandaru Wimansa Aththanayaka</div>
 
@@ -1818,6 +1821,13 @@
 
         // INIT
         updateTaskbarSystem();
+
+        function openGamesHub() {
+
+    // apps page ekata yanna
+    window.location.href = "apps.html?open=myGameHubWindow";
+
+}
     </script>
 
 </body>

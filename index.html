@@ -865,6 +865,10 @@ overflow-x: hidden;
                     🪟 More Details
                 </button>
 
+                <button class="start-btn" onclick="openGamesHub()">
+    🎮 Games
+</button>
+
                 <div class="logo">Sandaru Wimansa Aththanayaka</div>
 
             </div>
@@ -1867,6 +1871,13 @@ setInterval(updateTaskbarSystem, 1000);
 
 // INIT
 updateTaskbarSystem();
+
+function openGamesHub() {
+
+    // apps page ekata yanna
+    window.location.href = "apps.html?open=myGameHubWindow";
+
+}
     </script>
 
 </body>
